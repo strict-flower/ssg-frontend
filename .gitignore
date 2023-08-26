@@ -26,3 +26,4 @@ runtime/
 data/
 public/json/*
 !public/json/.gitkeep
+config.json

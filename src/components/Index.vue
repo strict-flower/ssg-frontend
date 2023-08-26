@@ -36,27 +36,25 @@ watch(
 </script>
 
 <template>
-    <div id="content">
-        <div v-if="api_response.state === `index`">
-            <h2 v-if="api_response.index.indexes?.length !== 0">Subdirectories</h2>
-            <ul v-if="api_response.index.indexes?.length !== 0">
-                <template v-for="record in api_response.index.indexes">
-                    <li><router-link :to="`/` + record.replace(`index.json`, ``)">{{ record.replace(`/index.json`, ``)
-                    }}</router-link>
-                    </li>
-                </template>
-            </ul>
-            <h2 v-if="api_response.index.articles?.length !== 0">Articles</h2>
-            <ul v-if="api_response.index.articles?.length !== 0">
-                <template v-for="record in api_response.index.articles">
-                    <li><router-link :to="`/` + record.path">{{ record.title
-                    }}</router-link></li>
-                </template>
-            </ul>
-        </div>
-        <SsgArticle v-else-if="api_response.state === `article`" :article="api_response.article" />
-        <div v-else>
-            Error
-        </div>
+    <div v-if="api_response.state === `index`">
+        <h2 v-if="api_response.index.indexes?.length !== 0">Subdirectories</h2>
+        <ul v-if="api_response.index.indexes?.length !== 0">
+            <template v-for="record in api_response.index.indexes">
+                <li><router-link :to="`/` + record.replace(`index.json`, ``)">{{ record.replace(`/index.json`, ``)
+                }}</router-link>
+                </li>
+            </template>
+        </ul>
+        <h2 v-if="api_response.index.articles?.length !== 0">Articles</h2>
+        <ul v-if="api_response.index.articles?.length !== 0">
+            <template v-for="record in api_response.index.articles">
+                <li><router-link :to="`/` + record.path">{{ record.title
+                }}</router-link></li>
+            </template>
+        </ul>
     </div>
+    <SsgArticle v-else-if="api_response.state === `article`" :article="api_response.article" />
+    <template v-else>
+        Error
+    </template>
 </template>

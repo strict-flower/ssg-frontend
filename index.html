@@ -10,12 +10,10 @@
 
 <body>
   <div id="app">
-    <h1>Hello App!</h1>
-    <p>
-      <router-link to="/">Go to root</router-link>
-    </p>
-
-    <router-view />
+    <div id="content">
+      <ssg-header></ssg-header>
+      <router-view></router-view>
+    </div>
   </div>
   <script type="module" src="/src/main.ts"></script>
 </body>

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build && rm -rf public/json/* && ./runtime/ssg data public/json",
+    "build": "rm -rf public/json/* && ./runtime/ssg data public/json && vue-tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

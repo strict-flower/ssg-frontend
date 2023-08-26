@@ -5,11 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vue-tsc && vite build && rm -rf public/json/* && ./runtime/ssg data public/json",
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.3.4"
+    "mathjax": "^3.2.2",
+    "mathjax-vue3": "^1.0.1",
+    "vue": "^3.3.4",
+    "vue-router": "^4.2.4"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",

@@ -51,6 +51,11 @@ onUnmounted(() => {
 </script>
 
 <template>
-    <h2>{{ props.article.title }}</h2>
-    <article v-html="props.article.body" />
+    <article>
+        <div class="date">{{ props.article.modified_at }}</div>
+        <router-link :to="`/` + props.article.url" class="h2 title">
+            {{ props.article.title }}
+        </router-link>
+        <div v-html="props.article.body" class="body"></div>
+    </article>
 </template>

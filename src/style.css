@@ -120,19 +120,19 @@ hr.half {
   margin: 2em auto;
 }
 
-#content .post {
+#content {
   font-family: Georgia, Merriweather, "游明朝", YuMincho, "Hiragino Mincho ProN W3", "ヒラギノ明朝 ProN W3",
     "Hiragino Mincho ProN", "HG明朝E", "ＭＳ Ｐ明朝", "ＭＳ 明朝", serif;
   font-size: 1em;
   line-height: 1.6em;
 }
 
-#content .post a {
+#content a {
   color: #0F6F9F;
   text-decoration: none;
 }
 
-#content .post a:hover {
+#content a:hover {
   color: #D00000;
 }
 

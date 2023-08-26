@@ -1,12 +1,13 @@
 <script setup lang="ts">
-// import { useRoute } from 'vue-router';
 import { onUpdated, onUnmounted } from 'vue';
 import { type Article } from '../pagenode.ts'
-import { initMathJax, renderByMathjax } from 'mathjax-vue3'
+import { initMathJax, renderByMathjax } from '../mathjax.ts'
 
-// const route = useRoute();
 const renderContent = () => {
     const el = document.getElementById('content');
+    if (el === null) {
+        return;
+    }
     renderByMathjax(el);
 };
 
@@ -47,11 +48,9 @@ onUnmounted(() => {
     }
     window.MathJax.typesetClear();
 });
-
 </script>
 
 <template>
-    <div id="content">
-        <article v-html="props.article.body" />
-    </div>
+    <h2>{{ props.article.title }}</h2>
+    <article v-html="props.article.body" />
 </template>

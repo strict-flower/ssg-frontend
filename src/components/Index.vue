@@ -6,7 +6,7 @@ import SsgArticle from './SsgArticle.vue'
 
 const route = useRoute();
 
-const api_response = ref({ state: "init", data: {} as PageIndexJson | Article });
+const api_response = ref({ state: "init", index: {} as PageIndexJson, article: {} as Article });
 
 const fetch_data = async () => {
     if (route.fullPath.endsWith("/")) {
@@ -16,7 +16,7 @@ const fetch_data = async () => {
             return;
         }
         api_response.value.state = "index";
-        api_response.value.data = await data.json() as PageIndexJson;
+        api_response.value.index = await data.json() as PageIndexJson;
     } else { // article json
         let data = await fetch("/json/" + route.fullPath + ".json");
         if (!data.ok) {
@@ -24,7 +24,7 @@ const fetch_data = async () => {
             return;
         }
         api_response.value.state = "article";
-        api_response.value.data = await data.json() as Article;
+        api_response.value.article = await data.json() as Article;
     }
 };
 
@@ -36,25 +36,27 @@ watch(
 </script>
 
 <template>
-    <div v-if="api_response.state === `index`">
-        <h2>Subdirectories</h2>
-        <ul>
-            <template v-for="record in (api_response.data as PageIndexJson).indexes">
-                <li><router-link :to="`/` + record.replace(`index.json`, ``)">{{ record.replace(`/index.json`, ``)
-                }}</router-link>
-                </li>
-            </template>
-        </ul>
-        <h2>Articles</h2>
-        <ul>
-            <template v-for="record in (api_response.data as PageIndexJson).articles">
-                <li><router-link :to="`/` + record.path">{{ record.title
-                }}</router-link></li>
-            </template>
-        </ul>
-    </div>
-    <SsgArticle v-else-if="api_response.state === `article`" id="content" :article="api_response.data as Article" />
-    <div v-else>
-        Error
+    <div id="content">
+        <div v-if="api_response.state === `index`">
+            <h2 v-if="api_response.index.indexes.length !== 0">Subdirectories</h2>
+            <ul v-if="api_response.index.indexes.length !== 0">
+                <template v-for="record in api_response.index.indexes">
+                    <li><router-link :to="`/` + record.replace(`index.json`, ``)">{{ record.replace(`/index.json`, ``)
+                    }}</router-link>
+                    </li>
+                </template>
+            </ul>
+            <h2 v-if="api_response.index.articles.length !== 0">Articles</h2>
+            <ul v-if="api_response.index.articles.length !== 0">
+                <template v-for="record in api_response.index.articles">
+                    <li><router-link :to="`/` + record.path">{{ record.title
+                    }}</router-link></li>
+                </template>
+            </ul>
+        </div>
+        <SsgArticle v-else-if="api_response.state === `article`" id="content" :article="api_response.article" />
+        <div v-else>
+            Error
+        </div>
     </div>
 </template>

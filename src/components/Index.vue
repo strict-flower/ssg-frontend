@@ -3,6 +3,7 @@ import { onBeforeMount, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { type PageIndexJson, type Article } from '../pagenode.ts'
 import SsgArticle from './SsgArticle.vue'
+import SsgIndexes from './SsgIndexes.vue'
 
 const route = useRoute();
 
@@ -36,23 +37,7 @@ watch(
 </script>
 
 <template>
-    <div v-if="api_response.state === `index`">
-        <h2 v-if="api_response.index.indexes?.length !== 0">Subdirectories</h2>
-        <ul v-if="api_response.index.indexes?.length !== 0">
-            <template v-for="record in api_response.index.indexes.reverse()">
-                <li><router-link :to="`/` + record.replace(`index.json`, ``)">{{ record.replace(`/index.json`, ``)
-                }}</router-link>
-                </li>
-            </template>
-        </ul>
-        <h2 v-if="api_response.index.articles?.length !== 0">Articles</h2>
-        <ul v-if="api_response.index.articles?.length !== 0">
-            <template v-for="record in api_response.index.articles.reverse()">
-                <li><router-link :to="`/` + record.path">{{ record.title
-                }}</router-link></li>
-            </template>
-        </ul>
-    </div>
+    <SsgIndexes v-if="api_response.state === `index`" :index="api_response.index" />
     <SsgArticle v-else-if="api_response.state === `article`" :article="api_response.article" />
     <template v-else>
         Error

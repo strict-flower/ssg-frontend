@@ -1,15 +1,16 @@
 type ArticleSummary = {
     path: string,
     title: string,
-    created_at: string,
-    modified_at: string,
+    created_at: number,
+    modified_at: number,
 };
 
 export type Article = {
     url: string,
     title: string,
     body: string,
-    modified_at: string,
+    created_at: number,
+    modified_at: number,
     tags: string[],
 };
 

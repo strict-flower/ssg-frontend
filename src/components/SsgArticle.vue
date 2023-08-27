@@ -33,6 +33,16 @@ const props = defineProps<{
     article: Article
 }>();
 
+const convertToPostDate = (unixtime: number) => {
+    const date = new Date((unixtime + 9 * 3600) * 1000);
+    // let x = date.toISOString().split("T");
+    const month_strings = [
+        "January", "February", "March", "April", "May", "June", "July",
+        "August", "September", "October", "November", "December"
+    ];
+    return `${month_strings[date.getMonth() - 1]} ${("0" + date.getDate()).slice(-2)}, ${date.getFullYear()}`;
+};
+
 onUpdated(() => {
     if (!window.MathJax) {
         initMathJax(mathjax_conf, renderContent);
@@ -52,7 +62,7 @@ onUnmounted(() => {
 
 <template>
     <article>
-        <div class="date">{{ props.article.modified_at }}</div>
+        <div class="date">{{ convertToPostDate(props.article.created_at) }}</div>
         <router-link :to="`/` + props.article.url" class="h2 title">
             {{ props.article.title }}
         </router-link>

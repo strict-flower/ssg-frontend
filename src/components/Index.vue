@@ -39,7 +39,7 @@ watch(
     <div v-if="api_response.state === `index`">
         <h2 v-if="api_response.index.indexes?.length !== 0">Subdirectories</h2>
         <ul v-if="api_response.index.indexes?.length !== 0">
-            <template v-for="record in api_response.index.indexes">
+            <template v-for="record in api_response.index.indexes.reverse()">
                 <li><router-link :to="`/` + record.replace(`index.json`, ``)">{{ record.replace(`/index.json`, ``)
                 }}</router-link>
                 </li>
@@ -47,7 +47,7 @@ watch(
         </ul>
         <h2 v-if="api_response.index.articles?.length !== 0">Articles</h2>
         <ul v-if="api_response.index.articles?.length !== 0">
-            <template v-for="record in api_response.index.articles">
+            <template v-for="record in api_response.index.articles.reverse()">
                 <li><router-link :to="`/` + record.path">{{ record.title
                 }}</router-link></li>
             </template>

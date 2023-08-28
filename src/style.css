@@ -237,3 +237,7 @@ hr.half {
   font-weight: bold;
   text-decoration: none;
 }
+
+#content figure img {
+  width: 100%;
+}

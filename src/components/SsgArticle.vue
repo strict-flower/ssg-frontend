@@ -40,7 +40,7 @@ const convertToPostDate = (unixtime: number) => {
         "January", "February", "March", "April", "May", "June", "July",
         "August", "September", "October", "November", "December"
     ];
-    return `${month_strings[date.getMonth() - 1]} ${("0" + date.getDate()).slice(-2)}, ${date.getFullYear()}`;
+    return `${month_strings[date.getMonth()]} ${("0" + date.getDate()).slice(-2)}, ${date.getFullYear()}`;
 };
 
 onUpdated(() => {
@@ -49,8 +49,11 @@ onUpdated(() => {
     } else {
         renderContent();
     }
-});
 
+    document.querySelectorAll("div.details").forEach((node) => {
+        node.outerHTML = "<details>" + node.innerHTML + "</details>"
+    });
+});
 
 onUnmounted(() => {
     if (!window.MathJax) {

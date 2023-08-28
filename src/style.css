@@ -194,7 +194,7 @@ hr.half {
   color: #202020;
   font-weight: bold;
   font-style: normal !important;
-  font-family: 'Noto Serif', "游明朝", YuMincho, "Hiragino Mincho ProN W3", "ヒラギノ明朝 ProN W3", "Hiragino Mincho ProN", "HG明朝E", "ＭＳ Ｐ明朝", "ＭＳ 明朝", serif !important;
+  font-family: 'Noto Serif', "游明朝", YuMincho, "Hiragino Mincho ProN W3", "ヒラギノ明朝 ProN W3", "Hiragino Mincho ProN", "HG明朝E", "MS P明朝", "MS 明朝", serif !important;
   letter-spacing: -1px;
   font-size: 1.9em;
 }
@@ -240,4 +240,27 @@ hr.half {
 
 #content figure img {
   width: 100%;
+}
+
+#content article code {
+  font-size: 0.8em;
+  background: #D9E5ED;
+  font-family: 'Lucida Console', monospace;
+  padding: 1px 4px;
+}
+
+#content article pre {
+  background: #fff;
+  white-space: pre-wrap;
+  padding: 10px 15px;
+  border: black 1px solid;
+  line-height: 1.2em;
+}
+
+#content article pre>code {
+  background: transparent;
+  color: #555;
+  padding: 0;
+  margin: 0;
+  font-size: 1.1em;
 }

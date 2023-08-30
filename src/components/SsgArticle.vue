@@ -234,7 +234,7 @@ watch(
             font-size: 120%;
         }
 
-        .red {
+        &.red {
             border-left: 10px rgba(255, 31, 31, 0.5) solid;
         }
 

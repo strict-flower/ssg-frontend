@@ -4,8 +4,11 @@ import { useRoute } from 'vue-router';
 import { type PageIndexJson, type Article } from '../pagenode.ts'
 import SsgArticle from './SsgArticle.vue'
 import SsgIndexes from './SsgIndexes.vue'
+import config from '../../config.json'
 
 const route = useRoute();
+
+const DEFAULT_TITLE = config["title"] as string;
 
 const api_response = ref({ state: "init", index: {} as PageIndexJson, article: {} as Article });
 
@@ -26,6 +29,8 @@ const fetch_data = async () => {
         }
         api_response.value.state = "article";
         api_response.value.article = await data.json() as Article;
+
+        document.title = `${api_response.value.article.title} - ${DEFAULT_TITLE}`;
     }
 };
 

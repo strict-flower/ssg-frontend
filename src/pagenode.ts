@@ -14,6 +14,12 @@ export type Article = {
     tags: string[],
 };
 
+export type ArticleWithMetadata = {
+    article: Article,
+    prev_path: string,
+    next_path: string
+};
+
 type IndexPage = string;
 
 export type PageIndexJson = {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { type PageIndexJson, type Article } from '../pagenode.ts'
+import { type PageIndexJson, type ArticleWithMetadata } from '../pagenode.ts'
 import SsgArticle from './SsgArticle.vue'
 import SsgIndexes from './SsgIndexes.vue'
 import config from '../../config.json'
@@ -10,7 +10,7 @@ const route = useRoute();
 
 const DEFAULT_TITLE = config["title"] as string;
 
-const api_response = ref({ state: "init", index: {} as PageIndexJson, article: {} as Article });
+const api_response = ref({ state: "init", index: {} as PageIndexJson, article: {} as ArticleWithMetadata });
 
 const fetch_data = async () => {
     if (route.path.endsWith("/")) {
@@ -19,18 +19,18 @@ const fetch_data = async () => {
             api_response.value.state = "error";
             return;
         }
-        api_response.value.state = "index";
         api_response.value.index = await data.json() as PageIndexJson;
+        api_response.value.state = "index";
     } else { // article json
         let data = await fetch("/json/" + route.path + ".json");
         if (!data.ok) {
             api_response.value.state = "error";
             return;
         }
+        api_response.value.article = await data.json() as ArticleWithMetadata;
         api_response.value.state = "article";
-        api_response.value.article = await data.json() as Article;
 
-        document.title = `${api_response.value.article.title} - ${DEFAULT_TITLE}`;
+        document.title = `${api_response.value.article.article.title} - ${DEFAULT_TITLE}`;
     }
 };
 
@@ -62,8 +62,23 @@ watch(
         color: $color-link;
         text-decoration: none;
 
-        &:hover {
+        &:hover:not(.button) {
             color: $color-link-hover;
+        }
+    }
+
+    a.button {
+        color: #FFFFFF;
+        font-family: $fonts-sans-serif;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-decoration: none;
+        text-align: center;
+        background: #D00000;
+        margin: 0px 6px;
+
+        &:hover {
+            text-decoration: none;
         }
     }
 }

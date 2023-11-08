@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import { onUpdated, onUnmounted, watch } from 'vue';
+import { onMounted, onUpdated, onUnmounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { type Article } from '../pagenode.ts'
+import { type ArticleWithMetadata } from '../pagenode.ts'
 import { initMathJax, renderByMathjax } from '../mathjax.ts'
+import { convertToPostDate, convertToPostDateTime, scrollTop } from '../util.ts'
 
 const route = useRoute();
 
-const renderContent = () => {
+const renderMathJax = () => {
     const el = document.getElementById('content');
     if (el === null) {
         return;
@@ -33,24 +34,8 @@ const mathjax_conf = {
 };
 
 const props = defineProps<{
-    article: Article
+    article: ArticleWithMetadata,
 }>();
-
-const convertToPostDate = (unixtime: number) => {
-    const date = new Date((unixtime + 9 * 3600) * 1000);
-    // let x = date.toISOString().split("T");
-    const month_strings = [
-        "January", "February", "March", "April", "May", "June", "July",
-        "August", "September", "October", "November", "December"
-    ];
-    return `${month_strings[date.getUTCMonth()]} ${("0" + date.getUTCDate()).slice(-2)}, ${date.getUTCFullYear()}`;
-};
-
-const convertToPostDateTime = (unixtime: number) => {
-    const date = new Date((unixtime + 9 * 3600) * 1000);
-    let x = date.toISOString().split("T");
-    return `${x[0].replace(/-/g, "/")} ${x[1].substring(0, x[1].lastIndexOf(":"))}`;
-};
 
 /* we can't use :target because It won't work on webcomponent */
 const updateHashStyle = () => {
@@ -66,11 +51,11 @@ const updateHashStyle = () => {
     elem?.classList.add("fn-active");
 };
 
-onUpdated(() => {
+const renderContent = () => {
     if (!window.MathJax) {
-        initMathJax(mathjax_conf, renderContent);
+        initMathJax(mathjax_conf, renderMathJax);
     } else {
-        renderContent();
+        renderMathJax();
     }
 
     document.querySelectorAll("div.details").forEach((node) => {
@@ -78,7 +63,10 @@ onUpdated(() => {
     });
 
     updateHashStyle();
-});
+};
+
+onUpdated(renderContent);
+onMounted(renderContent);
 
 onUnmounted(() => {
     if (!window.MathJax) {
@@ -94,21 +82,35 @@ watch(
 </script>
 
 <template>
-    <article v-if="props.article.body !== undefined">
-        <div class="date">{{ convertToPostDate(props.article.created_at) }}</div>
-        <router-link :to="`/` + props.article.url" class="h2 title">
-            {{ props.article.title }}
-        </router-link>
-        <div v-html="props.article.body" class="body"></div>
-        <div class="bottom">
-            Created at: <router-link :to="`/` + props.article.url" class="time">
-                {{ convertToPostDateTime(props.article.created_at) }}
-            </router-link>
-            <div class="tags" v-if="props.article.tags?.length !== 0">
-                TAGS:
-                <span class="tag" v-for=" tag in props.article.tags">{{ tag }}</span>
+    <article v-if="props.article.article.body !== undefined">
+        <header>
+            <div class="date">
+                {{ convertToPostDate(props.article.article.created_at) }}
             </div>
-        </div>
+            <router-link :to="`/` + props.article.article.url" class="h2 title">
+                {{ props.article.article.title }}
+            </router-link>
+        </header>
+        <section v-html="props.article.article.body" class="body"></section>
+        <footer class="bottom">
+            <aside>
+                <section class="created_at">
+                    Created at: <router-link :to="`/` + props.article.article.url" class="time">
+                        {{ convertToPostDateTime(props.article.article.created_at) }}
+                    </router-link>
+                </section>
+                <section class="tags" v-if="props.article.article.tags?.length !== 0">
+                    TAGS:
+                    <span class="tag" v-for=" tag in props.article.article.tags">{{ tag }}</span>
+                </section>
+            </aside>
+            <nav>
+                <router-link :to="`/` + props.article.next_path" class="button" v-if="props.article.next_path !== ''"
+                    @click="scrollTop">Tomorrow</router-link>
+                <router-link :to="`/` + props.article.prev_path" class="button" v-if="props.article.prev_path !== ''"
+                    @click="scrollTop">Yesterday</router-link>
+            </nav>
+        </footer>
     </article>
 </template>
 
@@ -116,48 +118,6 @@ watch(
 #content article {
     border-top: 1px solid $color-matblack;
     padding: 8px 0 0 0;
-
-    .bottom {
-        width: 100%;
-        color: #444444;
-        font-family: $fonts-sans-serif;
-        font-size: 0.7em;
-        line-height: 1.8;
-        text-transform: uppercase;
-        border-top: 1px solid $color-matblack;
-        padding-top: 0.3em;
-
-        .tags {
-            text-transform: none !important;
-            margin: 0 13px 0 0;
-
-            .tag {
-                font-weight: 500;
-
-                &:not(:first-child)::before {
-                    content: ", ";
-                }
-            }
-        }
-
-        a {
-            color: #444444;
-            text-transform: none;
-            text-decoration: underline;
-
-            &:hover {
-                text-decoration: underline;
-            }
-        }
-
-        .time {
-            text-decoration: underline;
-            font-weight: bold;
-            text-transform: uppercase;
-            text-align: right;
-        }
-
-    }
 
     .date {
         font-weight: bold;
@@ -213,6 +173,10 @@ watch(
 
     a:hover {
         color: $color-link-hover;
+    }
+
+    a.button:hover {
+        color: white;
     }
 
     blockquote {
@@ -315,6 +279,57 @@ watch(
         }
     }
 
+    footer {
+        width: 100%;
+        color: #444444;
+        font-family: $fonts-sans-serif;
+        font-size: 0.7em;
+        line-height: 1.8;
+        text-transform: uppercase;
+        border-top: 1px solid $color-matblack;
+        padding-top: 0.3em;
+        display: flex;
+        justify-content: space-between;
+
+        aside {
+            max-width: 50%;
+
+            .tags {
+                text-transform: none !important;
+                margin: 0 13px 0 0;
+
+                .tag {
+                    font-weight: 500;
+
+                    &:not(:first-child)::before {
+                        content: ", ";
+                    }
+                }
+            }
+
+            a {
+                color: #444444;
+                text-transform: none;
+                text-decoration: underline;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            .time {
+                text-decoration: underline;
+                font-weight: bold;
+                text-transform: uppercase;
+                text-align: right;
+            }
+        }
+
+        nav {
+            text-align: right;
+            max-width: 50%;
+        }
+    }
 }
 
 #content figure img {

@@ -51,7 +51,7 @@ watch(
 
 <style lang="scss">
 #content {
-    min-width: 900px;
+    min-width: 640px;
     width: 65%;
     margin: 0 auto;
     font-family: Georgia, Merriweather, $fonts-serif;

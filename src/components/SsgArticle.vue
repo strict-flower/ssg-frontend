@@ -65,6 +65,10 @@ const renderContent = () => {
     updateHashStyle();
 };
 
+const prefetchArticle = async (path: string) => {
+    await fetch("/json/" + path + ".json");
+};
+
 onUpdated(renderContent);
 onMounted(renderContent);
 
@@ -106,9 +110,9 @@ watch(
             </aside>
             <nav>
                 <router-link :to="`/` + props.article.next_path" class="button" v-if="props.article.next_path !== ''"
-                    @click="scrollTop">Tomorrow</router-link>
+                    @click="scrollTop" @mouseover="prefetchArticle(props.article.next_path)">Tomorrow</router-link>
                 <router-link :to="`/` + props.article.prev_path" class="button" v-if="props.article.prev_path !== ''"
-                    @click="scrollTop">Yesterday</router-link>
+                    @click="scrollTop" @mouseover="prefetchArticle(props.article.prev_path)">Yesterday</router-link>
             </nav>
         </footer>
     </article>
@@ -189,6 +193,10 @@ watch(
         font-size: 1.2em;
         line-height: 1.7em;
         overflow-x: auto;
+
+        blockquote {
+            font-size: 1em;
+        }
 
         span.MathJax {
             font-size: 0.8333em;

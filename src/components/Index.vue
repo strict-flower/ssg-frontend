@@ -22,7 +22,7 @@ const fetch_data = async () => {
         api_response.value.index = await data.json() as PageIndexJson;
         api_response.value.state = "index";
     } else { // article json
-        let data = await fetch("/json/" + route.path + ".json");
+        let data = await fetch("/json" + route.path + ".json");
         if (!data.ok) {
             api_response.value.state = "error";
             return;

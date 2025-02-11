@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { onBeforeMount, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { type PageIndexJson, type ArticleWithMetadata } from '../pagenode.ts'
 import SsgArticle from './SsgArticle.vue'
 import SsgIndexes from './SsgIndexes.vue'
 import config from '../../config.json'
 
 const route = useRoute();
+
+const router = useRouter();
 
 const DEFAULT_TITLE = config["title"] as string;
 
@@ -21,6 +23,8 @@ const fetch_data = async () => {
         }
         api_response.value.index = await data.json() as PageIndexJson;
         api_response.value.state = "index";
+    } else if (route.path.endsWith(".md")) { // md extension should be removed
+        return router.push(route.path.replace(/.md$/, ""));
     } else { // article json
         let data = await fetch("/json" + route.path + ".json");
         if (!data.ok) {

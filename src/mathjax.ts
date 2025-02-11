@@ -74,5 +74,10 @@ export function renderByMathjax(el: HTMLElement): Promise<any> {
         el = [el] as any
     }
 
+    // Reset TeX state
+    // ref. How to reset MathJax instance welly both V2 and V3 #2931 - https://github.com/mathjax/MathJax/issues/2931
+    window.MathJax.texReset();
+    window.MathJax.typesetClear();
+
     return window.MathJax.typesetPromise(el)
 }

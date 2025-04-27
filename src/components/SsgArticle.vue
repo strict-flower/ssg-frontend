@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router';
 import { type ArticleWithMetadata } from '../pagenode.ts'
 import { initMathJax, renderByMathjax } from '../mathjax.ts'
 import { convertToPostDate, convertToPostDateTime, scrollTop } from '../util.ts'
+import Prism from 'prismjs'
 
 const route = useRoute();
 
@@ -62,6 +63,10 @@ const renderContent = () => {
         node.outerHTML = "<details>" + node.innerHTML + "</details>"
     });
 
+    document.querySelectorAll(".body").forEach((node) => {
+        Prism.highlightAllUnder(node, false);
+    });
+
     updateHashStyle();
 };
 
@@ -70,7 +75,10 @@ const prefetchArticle = async (path: string) => {
 };
 
 onUpdated(renderContent);
-onMounted(renderContent);
+onMounted(() => {
+    Prism.manual = true;
+    renderContent();
+});
 
 onUnmounted(() => {
     if (!window.MathJax) {

@@ -15,7 +15,7 @@ export default defineConfig({
         "diff",
         "ruby",
         "yaml",
-        "clike",
+        "cpp",
         "javascript",
         "java",
         "parigp",

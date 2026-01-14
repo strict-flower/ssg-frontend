@@ -19,6 +19,7 @@ export default defineConfig({
         "javascript",
         "java",
         "parigp",
+        "nix"
       ],
       css: true,
     }),
